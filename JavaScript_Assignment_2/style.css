@@ -78,13 +78,11 @@ select:focus, button:focus {
     transition: all 0.3s ease;
 }
 
-/* Timer turns red when ≤5 seconds left */
 .low-time {
     background-color: #ff4d4d !important;
     color: white !important;
 }
 
-/* Blinking animation when time < 7s */
 @keyframes blink {
     50% { opacity: 0.5; }
 }

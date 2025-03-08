@@ -11,7 +11,6 @@ body {
     position: relative;
 }
 
-/* Background card for quiz container */
 .quiz-container {
     display: flex;
     justify-content: center;
@@ -25,7 +24,6 @@ body {
     min-width: 400px;
 }
 
-/* Score on the top-left */
 #score-container {
     position: absolute;
     top: 20px;
@@ -38,7 +36,6 @@ body {
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
 }
 
-/* Timer positioned at the top-right */
 #timer {
     position: absolute;
     top: 20px;
@@ -53,13 +50,11 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Timer turns red when ≤5 seconds left */
 .low-time {
     background-color: #ff4d4d !important;
     color: white !important;
 }
 
-/* Blinking animation when time < 7s */
 @keyframes blink {
     50% { opacity: 0.5; }
 }
@@ -68,14 +63,12 @@ body {
     animation: blink 0.5s infinite;
 }
 
-/* Question Styling */
 #question {
     font-size: 22px;
     font-weight: bold;
     margin-bottom: 20px;
 }
 
-/* Options should be vertical */
 #options {
     display: flex;
     flex-direction: column;
@@ -85,7 +78,6 @@ body {
     margin-top: 20px;
 }
 
-/* Improved Option Button Styling */
 .option-button {
     background-color: #30363d;
     color: white;
@@ -112,7 +104,6 @@ body {
     cursor: not-allowed;
 }
 
-/* Button styling */
 button {
     background-color: #238636;
     border: none;

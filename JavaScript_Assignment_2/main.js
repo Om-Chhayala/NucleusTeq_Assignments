@@ -16,7 +16,7 @@ const startTest = async () => {
     const selectedCategory = categoryElement.options[categoryElement.selectedIndex].value;
     const selectedDifficulty = difficultyElement.options[difficultyElement.selectedIndex].value;
     
-    const URL = `https://opentdb.com/api.php?amount=2&category=${selectedCategory}&difficulty=${selectedDifficulty}&type=multiple`;
+    const URL = `https://opentdb.com/api.php?amount=20&category=${selectedCategory}&difficulty=${selectedDifficulty}&type=multiple`;
     
     try {
         const response = await fetch(URL, { method: "GET" });
@@ -54,25 +54,25 @@ function showQuestion() {
     
     startTimer();
 }
-const timerContainer = document.getElementById("timer"); // Define timerContainer
+const timerContainer = document.getElementById("timer"); 
 function startTimer() {
     let timeLeft = 15;
     timerElement.textContent = timeLeft;
     timerContainer.classList.remove("low-time", "blink");
-    timerContainer.style.backgroundColor = "#ffcc00"; // Default yellow
+    timerContainer.style.backgroundColor = "#ffcc00"; 
 
-    clearInterval(timer); // Prevent multiple timers
+    clearInterval(timer); 
 
     timer = setInterval(() => {
         timeLeft--;
         timerElement.textContent = timeLeft;
 
         if (timeLeft <= 7) {
-            timerContainer.classList.add("blink"); // Start blinking below 7 seconds
+            timerContainer.classList.add("blink"); 
         }
 
         if (timeLeft <= 5) {
-            timerContainer.classList.add("low-time"); // Change to red below 5 seconds
+            timerContainer.classList.add("low-time"); 
             timerContainer.style.backgroundColor = "#ff4d4d";
             timerContainer.style.color = "white";
         }

@@ -1,0 +1,94 @@
+body {
+    background-color: #0d1117;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.label-container {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.label-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+select, button {
+    background-color: #21262d;
+    color: #ffffff;
+    border: 2px solid #30363d;
+    padding: 14px 18px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button {
+    background-color: #238636;
+    border: none;
+    font-weight: bold;
+    margin-top: 25px;
+    padding: 14px 22px;
+}
+
+button:hover {
+    background-color: #2ea043;
+    transform: scale(1.05);
+}
+
+select:hover, button:hover {
+    border-color: #58a6ff;
+}
+
+select:focus, button:focus {
+    outline: none;
+    border-color: #79c0ff;
+    box-shadow: 0 0 10px rgba(120, 150, 255, 0.5);
+}
+
+#timer {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 15px;
+    background-color: #ffcc00;
+    color: #21262d;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+/* Timer turns red when ≤5 seconds left */
+.low-time {
+    background-color: #ff4d4d !important;
+    color: white !important;
+}
+
+/* Blinking animation when time < 7s */
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+.blink {
+    animation: blink 0.5s infinite;
+}

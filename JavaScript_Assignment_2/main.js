@@ -93,7 +93,7 @@ function selectAnswer(button, correctAnswer) {
     if (button.textContent === correctAnswer) {
         button.style.backgroundColor = "#2ea043";
         score++;
-        scoreElement.textContent = `Score: ${score}`;
+        scoreElement.textContent = `${score}`;
     } else {
         button.style.backgroundColor = "#ff4d4d";
         showCorrectAnswer();

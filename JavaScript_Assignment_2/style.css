@@ -63,30 +63,3 @@ select:focus, button:focus {
     border-color: #79c0ff;
     box-shadow: 0 0 10px rgba(120, 150, 255, 0.5);
 }
-
-#timer {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 22px;
-    font-weight: bold;
-    padding: 10px 15px;
-    border-radius: 15px;
-    background-color: #ffcc00;
-    color: #21262d;
-    display: inline-block;
-    transition: all 0.3s ease;
-}
-
-.low-time {
-    background-color: #ff4d4d !important;
-    color: white !important;
-}
-
-@keyframes blink {
-    50% { opacity: 0.5; }
-}
-
-.blink {
-    animation: blink 0.5s infinite;
-}

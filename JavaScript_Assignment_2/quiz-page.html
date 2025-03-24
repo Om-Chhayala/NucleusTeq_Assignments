@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <link rel="stylesheet" href="style-quiz-page.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz Game</h1>
+        <div id="question-container">
+            <h2 id="question">Loading question...</h2>
+            <div id="options"></div>
+            <div id="timer">Time left: <span id="time-left">15</span> seconds</div>
+        </div>
+        <button id="next-button" disabled>Next</button>
+        <div id="score-container">Score: <span id="score">0</span></div>
+        <button onclick="restart_test()" id="restart-button">Take Test Again</button>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

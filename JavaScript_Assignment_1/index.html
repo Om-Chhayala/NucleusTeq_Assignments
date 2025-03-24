@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dice-Game : Om Chhayala</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <button id="reset-game" class="reset-button">Reset Game</button>
+    <div class="player-card" id="player-1-id">
+      <h2 class="score">
+        Total Score: <span id="player-1-total-score">0</span>
+      </h2>
+      <h3 class="score">
+        Current Score: <span id="player-1-current-score">0</span>
+      </h3>
+      <h2 id="player-1-name">Player 1</h2>
+    </div>
+    <div class="main-container">
+      <div class="container">
+        <div id="dice" class="dice">
+          <div id="dice-one-side-one" class="side one">
+            <div class="dot one-1"></div>
+          </div>
+          <div id="dice-one-side-two" class="side two">
+            <div class="dot two-1"></div>
+            <div class="dot two-2"></div>
+          </div>
+          <div id="dice-one-side-three" class="side three">
+            <div class="dot three-1"></div>
+            <div class="dot three-2"></div>
+            <div class="dot three-3"></div>
+          </div>
+          <div id="dice-one-side-four" class="side four">
+            <div class="dot four-1"></div>
+            <div class="dot four-2"></div>
+            <div class="dot four-3"></div>
+            <div class="dot four-4"></div>
+          </div>
+          <div id="dice-one-side-five" class="side five">
+            <div class="dot five-1"></div>
+            <div class="dot five-2"></div>
+            <div class="dot five-3"></div>
+            <div class="dot five-4"></div>
+            <div class="dot five-5"></div>
+          </div>
+          <div id="dice-one-side-six" class="side six">
+            <div class="dot six-1"></div>
+            <div class="dot six-2"></div>
+            <div class="dot six-3"></div>
+            <div class="dot six-4"></div>
+            <div class="dot six-5"></div>
+            <div class="dot six-6"></div>
+          </div>
+        </div>
+      </div>
+      <div id="roll" class="roll-button"><button>Roll dice!</button></div>
+      <button id="save-score">Save Score</button>
+    </div>
+    <div class="player-card" id="player-2-id">
+      <h2 class="score">
+        Total Score: <span id="player-2-total-score">0</span>
+      </h2>
+      <h3 class="score">
+        Current Score: <span id="player-2-current-score">0</span>
+      </h3>
+      <h2 id="player-2-name">Player 2</h2>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>

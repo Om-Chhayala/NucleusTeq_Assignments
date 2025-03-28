@@ -1,0 +1,115 @@
+/* Page Container */
+.form-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: relative;
+}
+
+/* Fixed Home Button (Top Left) */
+.home-button {
+  position: fixed;
+  top: 15px;
+  left: 20px;
+  background: #333;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.home-button:hover {
+  background: #555;
+}
+
+/* Form Container */
+.form-container {
+  width: 60vw;
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Input Container (Fields One Below Another) */
+.input-container {
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* Input Field */
+.input-container input {
+  font-size: 18px;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 8px 0;
+  background-color: transparent;
+  outline: none;
+  color: #333;
+}
+
+/* Label Styling */
+.input-container .label {
+  position: absolute;
+  top: 8px;
+  left: 5px;
+  color: #777;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.input-container input:focus ~ .label,
+.input-container input:valid ~ .label {
+  top: -12px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Underline Animation */
+.input-container .underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #333;
+  transform: scaleX(0);
+  transition: all 0.3s ease;
+}
+
+.input-container input:focus ~ .underline,
+.input-container input:valid ~ .underline {
+  transform: scaleX(1);
+}
+
+/* Save Button */
+.save-button {
+  width: 100%;
+  padding: 10px;
+  background: #333;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-container {
+    width: 90%;
+  }
+}

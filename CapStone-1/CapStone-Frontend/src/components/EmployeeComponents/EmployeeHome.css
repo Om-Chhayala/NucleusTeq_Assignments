@@ -1,0 +1,97 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  width: 280px; 
+  padding: 15px;
+  color: white;
+  background: linear-gradient(#212121, #212121) padding-box,
+    linear-gradient(145deg, transparent 35%, #0a89a8, #252e31) border-box;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Smooth zoom effect */
+}
+
+.card .main-content {
+  flex: 1;
+}
+
+.card .header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.card .header span:first-child {
+  font-weight: 600;
+  color: #717171;
+}
+
+.card .heading {
+  font-size: 18px; 
+  margin: 12px 0;
+  font-weight: 600;
+}
+
+.card .description {
+  font-size: 13px;
+  color: #bbb;
+  margin-bottom: 12px;
+}
+
+
+.card .footer {
+  font-weight: 600;
+  color: #717171;
+}
+
+
+.card .read-more {
+  background-color: #0a89a8;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease-in-out;
+}
+
+.card .read-more:hover {
+  background-color: #085f7a;
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 260px;
+  }
+
+  .card .heading {
+    font-size: 16px;
+  }
+
+  .card .description {
+    font-size: 12px;
+  }
+
+  .card .read-more {
+    font-size: 12px;
+  }
+}

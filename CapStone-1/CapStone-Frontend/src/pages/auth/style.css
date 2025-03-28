@@ -1,0 +1,202 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+}
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.content h3 {
+  position: relative;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #cb00f5;
+  text-shadow: 0px 0px 10px #00c2cb50, 0px 0px 20px #00c2cb50;
+  transition: ease 0.3s;
+}
+
+.content h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: #cb00f5;
+  transform: perspective(10px) rotateX(10deg) scale(1, 0.2);
+  filter: blur(1em);
+  opacity: 0.5;
+}
+.content h3:hover {
+  color: #fff;
+  text-shadow: 0px 0px 10px #cb00f5, 0px 0px 20px #cb00f5;
+}
+.content h3:hover::before {
+  opacity: 1;
+}
+
+.main-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 2.5rem;
+  width: 20rem;
+  min-height: fit-content;
+  border-left: 2px solid #3f3f3f;
+  border-right: 2px solid #3f3f3f;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.button-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+button {
+  display: inline-block;
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+  border: 1px solid #9395ff;
+  position: relative;
+  transition: all 0.5s ease-in;
+  z-index: 1;
+}
+
+button::before,
+button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 100%;
+  transform: skew(15deg);
+  transition: all 0.5s;
+  z-index: -1;
+}
+
+button::before {
+  left: -10px;
+  background: #240046;
+}
+
+button::after {
+  right: -10px;
+  background: #5a189a;
+}
+
+button:hover::before,
+button:hover::after {
+  width: 58%;
+}
+
+button:hover span {
+  color: #e0aaff;
+  transition: 0.3s;
+}
+
+button span {
+  color: #03045e;
+  font-size: 18px;
+  transition: all 0.3s ease-in;
+}
+
+@media (max-width: 768px) {
+  .content h3 {
+    font-size: 1.5rem;
+  }
+
+  .main-section {
+    width: fit-content;
+    /* height: 80%; */
+    padding: 2rem;
+  }
+
+  button {
+    width: 130px;
+    height: 45px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content h3 {
+    font-size: 1.4rem;
+  }
+
+  .main-section {
+    width: fit-content;
+    /* height: 70%; */
+    padding: 1.5rem;
+  }
+
+  button {
+    width: 120px;
+    height: 40px;
+    font-size: 14px;
+  }
+}
+.input-container {
+    position: relative;
+    margin: 20px auto;
+    width: 200px;
+  }
+  
+  .input-container input[type="text"],
+  .input-container input[type="password"] {
+    font-size: 20px;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 5px 0;
+    background-color: transparent;
+    outline: none;
+  }
+  
+  .input-container .label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #ccc;
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .input-container input[type="text"]:focus ~ .label,
+  .input-container input[type="text"]:valid ~ .label,
+  .input-container input[type="password"]:focus ~ .label,
+  .input-container input[type="password"]:valid ~ .label {
+    top: -20px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .input-container .underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #333;
+    transform: scaleX(0);
+    transition: all 0.3s ease;
+  }
+  
+  .input-container input[type="text"]:focus ~ .underline,
+  .input-container input[type="text"]:valid ~ .underline,
+  .input-container input[type="password"]:focus ~ .underline,
+  .input-container input[type="password"]:valid ~ .underline {
+    transform: scaleX(1);
+  }
+  

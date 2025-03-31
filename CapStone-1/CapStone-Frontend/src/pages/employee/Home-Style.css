@@ -10,6 +10,11 @@
   gap: 10px;
 }
 
+.employee-home-header {
+  margin-top: 20px;
+  background-color: #f8f5ff;
+}
+
 .container input[type="radio"] {
   display: none;
 }

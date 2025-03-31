@@ -84,56 +84,179 @@ const HandleEmployees = () => {
     }
   };
   
+  // Format date for display
+  const formatDate = () => {
+    const date = new Date();
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  };
+
+  // Get initials from name
+  const getInitials = (name) => {
+    if (!name) return "?";
+    return name
+      .split(" ")
+      .map(part => part[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
+  };
 
   return (
-    <div className="card-container">
+    <div className="employee-container">
       <button className="add-employee-button" onClick={handleAddEmployee}>
-        Add Employee
+        <span>+</span> Add Employee
       </button>
 
       {loading ? (
-        <p className="loading-text">Loading employees...</p>
+        <div className="employee-loading">
+          <div className="employee-spinner"></div>
+          <p>Loading employees...</p>
+        </div>
       ) : error ? (
-        <p className="error-text">{error}</p>
+        <div className="employee-error">{error}</div>
       ) : employees.length === 0 ? (
-        <p className="no-employees">No employees found</p>
+        <div className="employee-empty-state">
+          <p>No employees found. Add your first employee to get started.</p>
+        </div>
       ) : (
-        employees.map((employee) => (
-          <div className="card" key={employee.id}>
-            <div className="main-content">
-              <div className="header">
-                <span>Department:</span>
-                <span>{employee.department || "N/A"}</span>
+        <div className="employee-card-grid">
+          {employees.map((employee) => (
+            <div className="employee-card" key={employee.id}>
+              <div className="employee-card-header">
+                <div className="employee-department-badge">
+                  {employee.department || "Unassigned"}
+                </div>
+                <div className="employee-date">{formatDate()}</div>
               </div>
-              <p className="heading">{employee.name}</p>
-              <p className="description">Email: {employee.email}</p>
-              <p className="description">Contact: {employee.contact || "N/A"}</p>
-              <p className="description">Address: {employee.address || "N/A"}</p>
+              
+              <h3 className="employee-name">{employee.name}</h3>
+              
+              <div className="employee-details">
+                <div className="employee-detail-item">
+                  <span className="employee-detail-label">Email:</span>
+                  <span>{employee.email}</span>
+                </div>
+                <div className="employee-detail-item">
+                  <span className="employee-detail-label">Contact:</span>
+                  <span>{employee.contact || "N/A"}</span>
+                </div>
+                <div className="employee-detail-item">
+                  <span className="employee-detail-label">Address:</span>
+                  <span>{employee.address || "N/A"}</span>
+                </div>
+              </div>
+              
+              <div className="employee-card-footer">
+                {/* <div className="employee-user">
+                  <div className="employee-user-avatar">
+                    {getInitials(employee.name)}
+                  </div>
+                </div> */}
+                <button 
+                  className="employee-edit-button" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditEmployee(employee);
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
             </div>
-            <button className="edit-button" onClick={() => handleEditEmployee(employee)}>
-              Edit
-            </button>
-          </div>
-        ))
+          ))}
+        </div>
       )}
 
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>{selectedEmployee.id ? "Edit Employee" : "Add Employee"}</h2>
-            <div className="modal-content">
-              <input type="text" name="name" value={selectedEmployee.name} onChange={handleChange} placeholder="Name" />
-              <input type="email" name="email" value={selectedEmployee.email} onChange={handleChange} placeholder="Email" />
-              {!selectedEmployee.id && (
-                <input type="password" name="password" value={selectedEmployee.password} onChange={handleChange} placeholder="Password" />
-              )}
-              <input type="text" name="contact" value={selectedEmployee.contact} onChange={handleChange} placeholder="Contact" />
-              <input type="text" name="department" value={selectedEmployee.department} onChange={handleChange} placeholder="Department" />
-              <input type="text" name="address" value={selectedEmployee.address} onChange={handleChange} placeholder="Address" />
+        <div className="employee-modal-overlay">
+          <div className="employee-modal">
+            <div className="employee-modal-header">
+              <h2>{selectedEmployee.id ? "Edit Employee" : "Add Employee"}</h2>
             </div>
-            <div className="modal-buttons">
-              <button className="save-button" onClick={handleSaveEmployee}>Save</button>
-              <button className="cancel-button" onClick={handleCloseModal}>Close</button>
+            
+            <div className="employee-modal-content">
+              <div className="employee-form-group">
+                <label className="employee-form-label">Name</label>
+                <input 
+                  className="employee-form-input"
+                  type="text" 
+                  name="name" 
+                  value={selectedEmployee.name} 
+                  onChange={handleChange} 
+                  placeholder="Enter employee name" 
+                />
+              </div>
+              
+              <div className="employee-form-group">
+                <label className="employee-form-label">Email</label>
+                <input 
+                  className="employee-form-input"
+                  type="email" 
+                  name="email" 
+                  value={selectedEmployee.email} 
+                  onChange={handleChange} 
+                  placeholder="Enter email address" 
+                />
+              </div>
+              
+              {!selectedEmployee.id && (
+                <div className="employee-form-group">
+                  <label className="employee-form-label">Password</label>
+                  <input 
+                    className="employee-form-input"
+                    type="password" 
+                    name="password" 
+                    value={selectedEmployee.password} 
+                    onChange={handleChange} 
+                    placeholder="Create password" 
+                  />
+                </div>
+              )}
+              
+              <div className="employee-form-group">
+                <label className="employee-form-label">Department</label>
+                <input 
+                  className="employee-form-input"
+                  type="text" 
+                  name="department" 
+                  value={selectedEmployee.department} 
+                  onChange={handleChange} 
+                  placeholder="Enter department" 
+                />
+              </div>
+              
+              <div className="employee-form-group">
+                <label className="employee-form-label">Contact</label>
+                <input 
+                  className="employee-form-input"
+                  type="text" 
+                  name="contact" 
+                  value={selectedEmployee.contact} 
+                  onChange={handleChange} 
+                  placeholder="Enter contact number" 
+                />
+              </div>
+              
+              <div className="employee-form-group">
+                <label className="employee-form-label">Address</label>
+                <input 
+                  className="employee-form-input"
+                  type="text" 
+                  name="address" 
+                  value={selectedEmployee.address} 
+                  onChange={handleChange} 
+                  placeholder="Enter address" 
+                />
+              </div>
+            </div>
+            
+            <div className="employee-modal-footer">
+              <button className="employee-save-button" onClick={handleSaveEmployee}>
+                {selectedEmployee.id ? "Update Employee" : "Add Employee"}
+              </button>
+              <button className="employee-cancel-button" onClick={handleCloseModal}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>

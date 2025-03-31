@@ -27,6 +27,11 @@
     cursor: pointer;
     transition: color 0.15s ease-in, text-shadow 0.3s ease-in-out;
   }
+
+  .hr-home-header {
+    margin-top: 20px;
+    background-color: #f8f5ff;
+  }
   
   .admin-container input[type="radio"]:checked + label {
     color: #185ee0;

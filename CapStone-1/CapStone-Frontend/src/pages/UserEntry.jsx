@@ -29,7 +29,7 @@ const UserEntry = () => {
         <div className="section">
           <h2>Administrator</h2>
           <div className="button-section">
-            <button type="button" onClick={handleButton("Admin", "login")}>
+            <button type="button" onClick={handleButton("HR", "login")}>
               Login
             </button>
           </div>

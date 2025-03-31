@@ -23,19 +23,28 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
+
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt password
         user.setStatus("ACTIVE"); // Default status
         userRepository.save(user);
+
         return ResponseEntity.ok("User registered successfully");
     }
 
     // Login user
     public ResponseEntity<String> loginUser(String email, String password) {
-        Optional<UserModel> user = userRepository.findByEmail(email);
-        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
+        Optional<UserModel> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent() && passwordEncoder.matches(password, userOpt.get().getPassword())) {
             return ResponseEntity.ok("Login successful");
         }
         return ResponseEntity.badRequest().body("Invalid email or password");
+    }
+
+    // Get user profile by email
+    public ResponseEntity<UserModel> getUserByEmail(String email) {
+        Optional<UserModel> user = userRepository.findByEmail(email);
+        return user.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().body(null));
     }
 
     // Update user profile
@@ -45,9 +54,15 @@ public class UserService {
             UserModel user = userOpt.get();
             user.setName(updatedUser.getName());
             user.setEmail(updatedUser.getEmail());
-            if (!updatedUser.getPassword().isEmpty()) {
+            user.setDepartment(updatedUser.getDepartment());
+            user.setContact(updatedUser.getContact());
+            user.setAddress(updatedUser.getAddress());
+
+            // Only update password if a new one is provided
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
                 user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             }
+
             userRepository.save(user);
             return ResponseEntity.ok("User updated successfully");
         }
@@ -66,6 +81,7 @@ public class UserService {
         return ResponseEntity.badRequest().body("User not found");
     }
 
+    // Get all users
     public List<UserModel> getAllUsers() {
         return userRepository.findAll();
     }

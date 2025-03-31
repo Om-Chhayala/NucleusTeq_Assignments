@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/employee-responses")
 @CrossOrigin(origins = "*")
+@RequestMapping("/api/employee-responses")
 public class EmployeeResponseController {
 
     @Autowired
@@ -35,16 +35,14 @@ public class EmployeeResponseController {
     }
 
     // Get responses by employee name
-    @GetMapping("/by-name")
-    public ResponseEntity<List<EmployeeResponse>> getResponsesByName(@RequestBody Map<String, String> request) {
-        String name = request.get("name");
-        return ResponseEntity.ok(employeeResponseService.getResponsesByName(name));
+    @GetMapping("/by-id")
+    public ResponseEntity<List<EmployeeResponse>> getResponsesById(@RequestParam Long id) {
+        return ResponseEntity.ok(employeeResponseService.getResponsesById(id));
     }
 
     // Get responses by department
     @GetMapping("/by-department")
-    public ResponseEntity<List<EmployeeResponse>> getResponsesByDepartment(@RequestBody Map<String, String> request) {
-        String department = request.get("department");
+    public ResponseEntity<List<EmployeeResponse>> getResponsesByDepartment(@RequestParam String department) {
         return ResponseEntity.ok(employeeResponseService.getResponsesByDepartment(department));
     }
 

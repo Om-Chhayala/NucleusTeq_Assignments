@@ -38,9 +38,13 @@ public class FormService {
         return ResponseEntity.badRequest().body("Form not found");
     }
 
-    // Delete a form by ID
+    // Delete a form by ID (Fix: Clear questions before deletion)
     public ResponseEntity<String> deleteForm(Long id) {
-        if (formRepository.existsById(id)) {
+        Optional<FormModel> form = formRepository.findById(id);
+        if (form.isPresent()) {
+            FormModel existingForm = form.get();
+            existingForm.getQuestions().clear(); // Ensure child elements are removed
+            formRepository.save(existingForm);
             formRepository.deleteById(id);
             return ResponseEntity.ok("Form deleted successfully");
         }

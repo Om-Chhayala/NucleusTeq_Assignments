@@ -1,0 +1,178 @@
+/* 🔹 Prevents background scrolling when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* 🔹 Modal Overlay - Dark background behind modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 🔹 Modal Container - Main popup */
+.modal {
+    background: white;
+    width: 90%; /* Covers 90% of screen width */
+    max-width: 1100px; /* Prevents it from getting too large */
+    max-height: 85vh; /* Prevents modal from overflowing viewport */
+    overflow-y: hidden; /* Prevents full-page scrolling */
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 🔹 Modal Content - Enables scrolling inside modal when needed */
+.modal-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+    padding-bottom: 20px; /* Extra space for buttons */
+}
+
+/* 🔹 Input Fields */
+.modal input {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+    background: #f9f9f9; /* Light background */
+    color: black;
+    margin-bottom: 12px;
+}
+
+/* 🔹 Labels */
+.modal label {
+    font-size: 16px;
+    font-weight: 600;
+    color: black;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* 🔹 Focus Effect */
+.modal input:focus {
+    border-color: #0a89a8;
+    box-shadow: 0 0 6px rgba(10, 137, 168, 0.5);
+}
+
+/* 🔹 Question Row - Container for each question + remove button */
+.question-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* 🔹 Smaller Remove Question Button */
+.remove-question {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 8px; /* 🔸 Smaller size */
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.remove-question:hover {
+    background-color: #b02a37;
+}
+
+/* 🔹 Button Section - Ensures buttons stay aligned & spaced properly */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    padding-bottom: 15px;
+}
+
+/* 🔹 Main Buttons - Ensures consistent button sizing */
+.modal .save-button,
+.modal .cancel-button,
+.modal .add-question {
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    flex: 1;
+    max-width: 250px;
+}
+
+/* 🔹 Save Button */
+.modal .save-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.modal .save-button:hover {
+    background-color: #0056b3;
+}
+
+/* 🔹 Cancel Button - Now slightly smaller */
+.modal .cancel-button {
+    background-color: #ccc;
+    color: black;
+    padding: 10px 16px; /* 🔸 Smaller size */
+    font-size: 14px; /* 🔸 Smaller text */
+    max-width: 180px; /* 🔸 Prevents too large */
+}
+
+.modal .cancel-button:hover {
+    background-color: #999;
+}
+
+/* 🔹 Add Question Button - Maintains height & spacing */
+.modal .add-question {
+    background-color: #28a745;
+    color: white;
+    margin-top: 10px;
+    min-height: 50px; /* 🔸 Ensures consistent height */
+}
+
+.modal .add-question:hover {
+    background-color: #218838;
+}
+
+/* 🔹 Prevents buttons from shrinking */
+.modal-buttons button {
+    flex-shrink: 0;
+}
+
+/* 🔹 Responsive Adjustments */
+@media (max-width: 768px) {
+    .modal {
+        width: 95%;
+        max-height: 90vh;
+    }
+
+    .modal-header {
+        font-size: 18px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

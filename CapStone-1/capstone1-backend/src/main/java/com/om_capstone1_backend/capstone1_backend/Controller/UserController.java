@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserService userService;  // ✅ Make sure this instance is used
 
     // Register a new user
     @PostMapping("/register")
@@ -23,7 +23,7 @@ public class UserController {
         return userService.registerUser(user);
     }
 
-    // Login user (Fixed: Accept JSON object in request body)
+    // Login user
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
@@ -34,14 +34,15 @@ public class UserController {
     // Update user profile
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody Map<String, String> updateRequest) {
-        long id = Long.parseLong(updateRequest.get("id")); // Corrected to parse Long
+        long id = Long.parseLong(updateRequest.get("id"));
         String email = updateRequest.get("email");
         String name = updateRequest.get("name");
         String password = updateRequest.get("password");
         String department = updateRequest.get("department");
+        String contact = updateRequest.get("contact");
+        String address = updateRequest.get("address");
 
-        UserModel updateUser = new UserModel(id, name, email, password, "EMPLOYEE", "ACTIVE", department); // Ensure correct parameter order
-
+        UserModel updateUser = new UserModel(id, name, email, password, "EMPLOYEE", "ACTIVE", department, contact, address);
         return userService.updateUser(updateUser);
     }
 
@@ -49,6 +50,12 @@ public class UserController {
     @PutMapping("/deactivate/{id}")
     public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
         return userService.deactivateUser(id);
+    }
+
+    // ✅ Fix: Properly calling the instance method
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(@RequestParam String email) {
+        return userService.getUserByEmail(email);
     }
 
     @GetMapping("/all")

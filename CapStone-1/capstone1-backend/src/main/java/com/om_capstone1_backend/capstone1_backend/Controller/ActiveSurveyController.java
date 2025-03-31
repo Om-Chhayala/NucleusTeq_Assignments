@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/active-surveys")
 @CrossOrigin(origins = "*")
+@RequestMapping("/api/active-surveys")
 public class ActiveSurveyController {
 
     @Autowired

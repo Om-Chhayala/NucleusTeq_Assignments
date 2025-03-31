@@ -1,6 +1,8 @@
 package com.om_capstone1_backend.capstone1_backend.Model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import java.util.List;
 
 @Entity
@@ -14,8 +16,9 @@ public class FormModel {
     @Column(nullable = false)
     private String description; // Description of the form
 
-    @ElementCollection // ✅ Fix: Used for storing list of primitive types
+    @ElementCollection
     @CollectionTable(name = "form_questions", joinColumns = @JoinColumn(name = "form_id"))
+    @OnDelete(action = OnDeleteAction.CASCADE) // ✅ Fix: Proper cascading delete
     @Column(name = "question", nullable = false)
     private List<String> questions; // List of questions
 

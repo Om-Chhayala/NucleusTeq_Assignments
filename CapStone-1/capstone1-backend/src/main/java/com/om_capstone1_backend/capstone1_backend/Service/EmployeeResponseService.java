@@ -45,8 +45,8 @@ public class EmployeeResponseService {
     }
 
     // Get responses by employee name
-    public List<EmployeeResponse> getResponsesByName(String name) {
-        return employeeResponseRepository.findByUser_Name(name);
+    public List<EmployeeResponse> getResponsesById(Long id) {
+        return employeeResponseRepository.findByUser_Id(id);
     }
 
     // Get responses by department

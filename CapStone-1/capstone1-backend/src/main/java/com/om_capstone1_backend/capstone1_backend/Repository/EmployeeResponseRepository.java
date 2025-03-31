@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface EmployeeResponseRepository extends JpaRepository<EmployeeResponse, Long> {
-    List<EmployeeResponse> findByUser_Name(String name);
+    List<EmployeeResponse> findByUser_Id(Long id);
     List<EmployeeResponse> findByUser_Department(String department);
     List<EmployeeResponse> findBySubmittedAtBetween(LocalDateTime startTime, LocalDateTime endTime);
 }

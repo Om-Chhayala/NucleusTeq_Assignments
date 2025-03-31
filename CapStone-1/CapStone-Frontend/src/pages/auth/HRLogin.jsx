@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./style.css";
 
-const Login = () => {
+const HRLogin = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const who = params.get("who") || "User";
+  const who = params.get("who") || "HR"; // Set default role to HR
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -26,14 +26,15 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      // Fetch user profile after login
+      // Fetch HR profile after login
       const userProfile = await axios.get(`http://localhost:8080/api/users/profile?email=${formData.email}`);
 
-      // Store user details in localStorage
+      // Store HR details in localStorage
       localStorage.setItem("userEmail", formData.email);
+      localStorage.setItem("role", "HR");
 
-      console.log(`${who} logged in successfully`, userProfile.data);
-      navigate(`/${who.toLowerCase()}/home`);
+      console.log("HR logged in successfully", userProfile.data);
+      navigate("/hr/home");
     } catch (error) {
       setError(error.response?.data || "Login failed");
     }
@@ -42,7 +43,7 @@ const Login = () => {
   return (
     <div className="wrapper">
       <div className="main-section">
-        <h3 id="head-text">{who} Login Page</h3>
+        <h3 id="head-text">HR Login Page</h3>
 
         {error && <p className="error">{error}</p>}
 
@@ -86,4 +87,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default HRLogin;

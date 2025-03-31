@@ -1,109 +1,71 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import React, { useState } from "react";
+import axios from "axios";
 import "./style.css";
 
 const Signup = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const who = params.get("who") || "User"; 
+  const who = params.get("who") || "User";  
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     password: "",
+    department: "",
+    contact: "",
+    address: "",
   });
+
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleButton = () => {
-    console.log(`Performing login for ${who}`, formData);
-    navigate(`/${who.toLowerCase()}/home`);
+  const handleSignup = async () => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/users/register", formData, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      // Store user details in localStorage
+      localStorage.setItem("userEmail", formData.email);
+
+      console.log(`${who} registered successfully`, response.data);
+      navigate(`/${who.toLowerCase()}/home`);
+    } catch (error) {
+      setError(error.response?.data || "Registration failed");
+    }
   };
 
   return (
     <div className="wrapper">
-      {/* <div className="content">
-        <h3 id="head-text">{who} SignUp Page</h3>
-      </div> */}
       <div className="main-section">
-        <div className="input-container">
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <label htmlFor="name" className="label">
-            Enter Name
-          </label>
-          <div className="underline"></div>
-        </div>
+        <h3 id="head-text">{who} SignUp Page</h3>
 
-        <div className="input-container">
-          <input
-            type="text"
-            id="name"
-            name="email"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <label htmlFor="name" className="label">
-            Enter email
-          </label>
-          <div className="underline"></div>
-        </div>
+        {error && <p className="error">{error}</p>}
 
-        <div className="input-container">
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <label htmlFor="name" className="label">
-            Enter department
-          </label>
-          <div className="underline"></div>
-        </div>
-
-        <div className="input-container">
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <label htmlFor="name" className="label">
-            Enter location
-          </label>
-          <div className="underline"></div>
-        </div>
-        <div className="input-container">
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <label htmlFor="password" className="label">
-            Enter Password
-          </label>
-          <div className="underline"></div>
-        </div>
+        {Object.keys(formData).map((field) => (
+          <div className="input-container" key={field}>
+            <input
+              type={field === "password" ? "password" : "text"}
+              id={field}
+              name={field}
+              value={formData[field]}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor={field} className="label">
+              Enter {field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <div className="underline"></div>
+          </div>
+        ))}
 
         <div className="button-section">
-          <button type="button" onClick={handleButton}>
+          <button type="button" onClick={handleSignup}>
             SignUp
           </button>
         </div>
@@ -112,4 +74,4 @@ const Signup = () => {
   );
 };
 
-export default Signup
+export default Signup;

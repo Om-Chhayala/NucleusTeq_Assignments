@@ -356,3 +356,23 @@ input::placeholder {
 input:focus ~ label {
   color: #4a00e0;
 }
+.email-note {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.auth-error {
+  color: #ff4444;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #ffeeee;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

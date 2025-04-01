@@ -54,6 +54,10 @@ public class EmployeeResponseService {
         return employeeResponseRepository.findByUser_Department(department);
     }
 
+    public List<EmployeeResponse> getResponsesByAddress(String address) {
+        return employeeResponseRepository.findByUser_Address(address);
+    }
+
     // Get responses within a time range
     public List<EmployeeResponse> getResponsesByTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
         return employeeResponseRepository.findBySubmittedAtBetween(startTime, endTime);

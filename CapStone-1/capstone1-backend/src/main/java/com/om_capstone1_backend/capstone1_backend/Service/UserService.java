@@ -3,6 +3,7 @@ package com.om_capstone1_backend.capstone1_backend.Service;
 import com.om_capstone1_backend.capstone1_backend.Model.UserModel;
 import com.om_capstone1_backend.capstone1_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,24 @@ public class UserService {
         return ResponseEntity.ok("User registered successfully");
     }
 
+    public ResponseEntity<String> deleteUser(Long id) {
+        try {
+            Optional<UserModel> userOpt = userRepository.findById(id);
+
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User with ID " + id + " not found");
+            }
+
+            userRepository.deleteById(id);
+            return ResponseEntity.ok("User deleted successfully");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete user: " + e.getMessage());
+        }
+    }
+
     // Login user
     public ResponseEntity<String> loginUser(String email, String password) {
         Optional<UserModel> userOpt = userRepository.findByEmail(email);
@@ -38,6 +57,31 @@ public class UserService {
             return ResponseEntity.ok("Login successful");
         }
         return ResponseEntity.badRequest().body("Invalid email or password");
+    }
+
+    public ResponseEntity<String> changeUserRole(Long id, String newRole) {
+        try {
+            // Find the user by ID
+            Optional<UserModel> optionalUser = userRepository.findById(id);
+
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User with ID " + id + " not found");
+            }
+
+            UserModel user = optionalUser.get();
+
+            // Update the role
+            user.setRole(newRole);
+
+            // Save the updated user
+            userRepository.save(user);
+
+            return ResponseEntity.ok("User role successfully changed to " + newRole);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to change user role: " + e.getMessage());
+        }
     }
 
     // Get user profile by email

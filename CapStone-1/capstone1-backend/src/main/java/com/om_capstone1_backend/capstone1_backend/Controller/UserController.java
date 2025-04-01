@@ -23,6 +23,11 @@ public class UserController {
         return userService.registerUser(user);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        return userService.deleteUser(id);
+    }
+
     // Login user
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody Map<String, String> loginRequest) {
@@ -50,6 +55,11 @@ public class UserController {
     @PutMapping("/deactivate/{id}")
     public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
         return userService.deactivateUser(id);
+    }
+
+    @PutMapping("/change-role/{id}")
+    public ResponseEntity<String> changeUserToHR(@PathVariable Long id) {
+        return userService.changeUserRole(id, "HR");
     }
 
     // ✅ Fix: Properly calling the instance method

@@ -11,5 +11,6 @@ import java.util.List;
 public interface EmployeeResponseRepository extends JpaRepository<EmployeeResponse, Long> {
     List<EmployeeResponse> findByUser_Id(Long id);
     List<EmployeeResponse> findByUser_Department(String department);
+    List<EmployeeResponse> findByUser_Address(String address);
     List<EmployeeResponse> findBySubmittedAtBetween(LocalDateTime startTime, LocalDateTime endTime);
 }

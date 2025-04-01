@@ -23,11 +23,23 @@ const Signup = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
-    setError(null) // Clear error when user types
+    setError(null)
+  }
+
+  const validateEmailDomain = (email) => {
+    const allowedDomain = "@nucleausteq.com"
+    return email.endsWith(allowedDomain) && email.length > allowedDomain.length
   }
 
   const handleSignup = async (e) => {
     e.preventDefault()
+    
+    // Validate email domain before submission
+    if (!validateEmailDomain(formData.email)) {
+      setError("Only @nucleausteq.com email addresses are allowed")
+      return
+    }
+
     setIsLoading(true)
 
     try {
@@ -35,9 +47,7 @@ const Signup = () => {
         headers: { "Content-Type": "application/json" },
       })
 
-      // Store user details in localStorage
       localStorage.setItem("userEmail", formData.email)
-
       console.log(`${who} registered successfully`, response.data)
       navigate(`/${who.toLowerCase()}/home`)
     } catch (error) {
@@ -47,7 +57,6 @@ const Signup = () => {
     }
   }
 
-  // Field labels with proper formatting
   const fieldLabels = {
     name: "Full Name",
     email: "Email Address",
@@ -81,11 +90,18 @@ const Signup = () => {
                   placeholder={`Enter your ${fieldLabels[field].toLowerCase()}`}
                   required
                 />
+                {field === "email" && (
+                  <div className="email-note">Please use your @nucleausteq.com email</div>
+                )}
               </div>
             ))}
           </div>
 
-          <button type="submit" className={`auth-button ${isLoading ? "loading" : ""}`} disabled={isLoading}>
+          <button 
+            type="submit" 
+            className={`auth-button ${isLoading ? "loading" : ""}`} 
+            disabled={isLoading}
+          >
             {isLoading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
@@ -104,4 +120,3 @@ const Signup = () => {
 }
 
 export default Signup
-

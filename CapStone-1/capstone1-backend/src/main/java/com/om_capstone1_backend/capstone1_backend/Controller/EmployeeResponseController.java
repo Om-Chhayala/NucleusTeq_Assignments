@@ -46,6 +46,11 @@ public class EmployeeResponseController {
         return ResponseEntity.ok(employeeResponseService.getResponsesByDepartment(department));
     }
 
+    @GetMapping("/by-address")
+    public ResponseEntity<List<EmployeeResponse>> getResponsesByAddress(@RequestParam String address) {
+        return ResponseEntity.ok(employeeResponseService.getResponsesByAddress(address));
+    }
+
     // Get responses within a time range
     @GetMapping("/by-time-range")
     public ResponseEntity<List<EmployeeResponse>> getResponsesByTimeRange(@RequestBody Map<String, String> request) {

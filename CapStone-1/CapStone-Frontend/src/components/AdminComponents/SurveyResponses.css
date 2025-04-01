@@ -460,3 +460,37 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Add to your SurveyResponses.css */
+.survey-responses-user-address {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  margin-left: 0.5rem;
+  font-style: italic;
+}
+
+/* Update the user info section in the card footer */
+.survey-responses-card-footer .survey-responses-user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+/* Make sure the modal info items display properly */
+.survey-responses-info-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.survey-responses-info-label {
+  font-weight: 600;
+  color: #7f8c8d;
+  font-size: 0.85rem;
+}
+
+.survey-responses-info-value {
+  color: #2c3e50;
+  font-size: 1rem;
+}

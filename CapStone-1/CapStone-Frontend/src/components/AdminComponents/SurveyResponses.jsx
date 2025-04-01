@@ -6,6 +6,7 @@ const SurveyResponses = () => {
   const [surveys, setSurveys] = useState([]);
   const [filteredSurveys, setFilteredSurveys] = useState([]);
   const [department, setDepartment] = useState("");
+  const [address, setAddress] = useState(""); // Changed from location to address
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedSurvey, setSelectedSurvey] = useState(null);
@@ -30,33 +31,48 @@ const SurveyResponses = () => {
   const handleFilter = async () => {
     setIsLoading(true);
     
-    if (department) {
-      try {
+    try {
+      let filteredData = [...surveys];
+      
+      if (department) {
         const response = await axios.get(`http://localhost:8080/api/employee-responses/by-department`, {
           params: { department },
         });
-        setFilteredSurveys(response.data);
-      } catch (error) {
-        console.error("Error fetching department responses:", error.response?.data || error.message);
+        filteredData = response.data;
       }
-    } else if (startTime && endTime) {
-      try {
+      
+      if (address) {
+        const response = await axios.get(`http://localhost:8080/api/employee-responses/by-address`, {
+          params: { address },
+        });
+        // If we already filtered by department, filter those results further
+        filteredData = filteredData.filter(survey => 
+          response.data.some(r => r.id === survey.id)
+        );
+      }
+      
+      if (startTime && endTime) {
         const response = await axios.get("http://localhost:8080/api/employee-responses/by-time-range", {
           params: { startTime, endTime },
         });
-        setFilteredSurveys(response.data);
-      } catch (error) {
-        console.error("Error fetching time range responses:", error.response?.data || error.message);
+        // Apply time range filter to existing filtered results
+        filteredData = filteredData.filter(survey => 
+          response.data.some(r => r.id === survey.id)
+        );
       }
-    } else {
-      setFilteredSurveys(surveys);
+      
+      setFilteredSurveys(filteredData);
+    } catch (error) {
+      console.error("Error filtering responses:", error.response?.data || error.message);
+      setFilteredSurveys([]);
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   const resetFilters = () => {
     setDepartment("");
+    setAddress("");
     setStartTime("");
     setEndTime("");
     setFilteredSurveys(surveys);
@@ -78,6 +94,18 @@ const SurveyResponses = () => {
             placeholder="Filter by Department"
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
+            className="survey-responses-filter-input"
+          />
+        </div>
+        
+        <div className="survey-responses-filter-group">
+          <label htmlFor="address">Address</label>
+          <input
+            id="address"
+            type="text"
+            placeholder="Filter by Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
             className="survey-responses-filter-input"
           />
         </div>
@@ -151,6 +179,7 @@ const SurveyResponses = () => {
                       {survey.user.name.charAt(0)}
                     </div>
                     <span>{survey.user.name}</span>
+                    <span className="survey-responses-user-address">{survey.user.address}</span>
                   </div>
                   <button className="survey-responses-button">View</button>
                 </div>
@@ -165,13 +194,26 @@ const SurveyResponses = () => {
           <div className="survey-responses-modal" onClick={(e) => e.stopPropagation()}>
             <div className="survey-responses-modal-header">
               <h2>{selectedSurvey.form.formType}</h2>
-              
+              <button 
+                className="survey-responses-modal-close" 
+                onClick={() => setSelectedSurvey(null)}
+              >
+                &times;
+              </button>
             </div>
             
             <div className="survey-responses-modal-info">
               <div className="survey-responses-info-item">
                 <span className="survey-responses-info-label">Submitted by:</span>
                 <span className="survey-responses-info-value">{selectedSurvey.user.name}</span>
+              </div>
+              <div className="survey-responses-info-item">
+                <span className="survey-responses-info-label">Department:</span>
+                <span className="survey-responses-info-value">{selectedSurvey.user.department}</span>
+              </div>
+              <div className="survey-responses-info-item">
+                <span className="survey-responses-info-label">Address:</span>
+                <span className="survey-responses-info-value">{selectedSurvey.user.address}</span>
               </div>
               <div className="survey-responses-info-item">
                 <span className="survey-responses-info-label">Date:</span>

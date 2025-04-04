@@ -7,6 +7,7 @@ import com.om_capstone1_backend.capstone1_backend.Repository.EmployeeResponseRep
 import com.om_capstone1_backend.capstone1_backend.Repository.FormRepository;
 import com.om_capstone1_backend.capstone1_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,43 @@ public class EmployeeResponseService {
         }
         return ResponseEntity.badRequest().body("Invalid User ID or Form ID");
     }
+
+    public ResponseEntity<String> deleteResponse(Long responseId) {
+        try {
+            if (!employeeResponseRepository.existsById(responseId)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Response not found");
+            }
+
+            employeeResponseRepository.deleteById(responseId);
+            return ResponseEntity.ok("Response deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting response: " + e.getMessage());
+        }
+    }
+
+    public ResponseEntity<String> updateResponse(Long responseId, EmployeeResponse updatedResponse) {
+        try {
+            Optional<EmployeeResponse> existingResponse = employeeResponseRepository.findById(responseId);
+
+            if (existingResponse.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Response not found");
+            }
+
+            EmployeeResponse responseToUpdate = existingResponse.get();
+            responseToUpdate.setResponses(updatedResponse.getResponses());
+            // You might want to update the timestamp as well
+            responseToUpdate.setSubmittedAt(LocalDateTime.now());
+
+            employeeResponseRepository.save(responseToUpdate);
+            return ResponseEntity.ok("Response updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating response: " + e.getMessage());
+        }
+    }
+
+
 
     // Get all employee responses
     public List<EmployeeResponse> getAllResponses() {

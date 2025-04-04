@@ -64,7 +64,7 @@ const EmployeeHome = () => {
                   </span>
                   <span className="employee-home-badge">{survey.title || "Survey"}</span>
                 </div>
-                <h3 className="employee-home-title">{survey.title}</h3>
+                <h3 className="employee-home-title">{survey.formType}</h3>
                 <p className="employee-home-description">{survey.description}</p>
                 <div className="employee-home-card-footer">
                   <div className="employee-home-owner">

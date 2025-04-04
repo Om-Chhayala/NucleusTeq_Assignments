@@ -37,6 +37,75 @@
   position: relative;
 }
 
+/* Delete Button Style */
+.prev-survey-modal-button.delete-button {
+  background-color: #e74c3c;
+}
+
+.prev-survey-modal-button.delete-button:hover {
+  background-color: #c0392b;
+}
+
+/* Delete Confirmation */
+.prev-survey-delete-confirm {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  border-left: 4px solid #e74c3c;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  z-index: 1010; /* Higher than the modal */
+}
+
+/* Add a semi-transparent overlay inside the modal for the confirmation dialog */
+.prev-survey-modal-overlay .prev-survey-delete-confirm::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.prev-survey-delete-confirm p {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.prev-survey-confirm-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Confirm Delete Button */
+.prev-survey-modal-button.confirm-delete-button {
+  background-color: #e74c3c;
+}
+
+.prev-survey-modal-button.confirm-delete-button:hover {
+  background-color: #c0392b;
+}
+
+/* Cancel Delete Button */
+.prev-survey-modal-button.cancel-delete-button {
+  background-color: #95a5a6;
+}
+
+.prev-survey-modal-button.cancel-delete-button:hover {
+  background-color: #7f8c8d;
+}
+
 .prev-survey-list {
   display: flex;
   flex-wrap: wrap;
@@ -176,8 +245,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* No Results */
@@ -220,6 +293,7 @@
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
 .prev-survey-modal-content h2 {
@@ -235,7 +309,7 @@
 }
 
 .prev-survey-modal-content p {
-  color: #7f8c8d;
+  color: #000000;
   margin-bottom: 0.5rem;
 }
 
@@ -258,6 +332,42 @@
   color: #7f8c8d;
 }
 
+/* Modal Buttons Container */
+.prev-survey-modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+/* Edit Button Style */
+.prev-survey-modal-button.edit-button {
+  background-color: #2ecc71;
+}
+
+.prev-survey-modal-button.edit-button:hover {
+  background-color: #27ae60;
+}
+
+/* Save Button Style */
+.prev-survey-modal-button.save-button {
+  background-color: #2ecc71;
+}
+
+.prev-survey-modal-button.save-button:hover {
+  background-color: #27ae60;
+}
+
+/* Cancel Button Style */
+.prev-survey-modal-button.cancel-button {
+  background-color: #e74c3c;
+}
+
+.prev-survey-modal-button.cancel-button:hover {
+  background-color: #c0392b;
+}
+
+/* Modal Button Styles */
 .prev-survey-modal-button {
   background-color: #3498db;
   color: white;
@@ -268,11 +378,31 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 600;
-  margin-top: 1.5rem;
 }
 
 .prev-survey-modal-button:hover {
   background-color: #2980b9;
+}
+
+/* Edit Textarea */
+.prev-survey-edit-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #2c3e50;
+  resize: vertical;
+  margin-top: 0.5rem;
+  transition: border-color 0.2s ease;
+}
+
+.prev-survey-edit-textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 /* Responsive Design */
@@ -280,7 +410,7 @@
   .prev-survey-list {
     justify-content: center;
   }
-  
+
   .prev-survey-modal-content {
     width: 95%;
     padding: 1.5rem;
@@ -293,17 +423,36 @@
     height: auto;
     min-height: 250px;
   }
-  
+
   .prev-survey-actions {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .prev-survey-container {
     padding: 1rem;
   }
-  
+
   .prev-survey-modal-content {
     padding: 1rem;
+  }
+
+  .prev-survey-modal-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .prev-survey-modal-button {
+    width: 100%;
+  }
+  
+  .prev-survey-delete-confirm {
+    width: 95%;
+    padding: 1.25rem;
+  }
+  
+  .prev-survey-confirm-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
   }
 }

@@ -42,7 +42,7 @@ const HandleEmployees = () => {
       department: "",
       contact: "",
       address: "",
-      role: "USER",
+      role: "Employee",
     });
     setShowModal(true);
     document.body.classList.add("modal-open");
@@ -72,7 +72,8 @@ const HandleEmployees = () => {
           "http://localhost:8080/api/users/register",
           selectedEmployee
         );
-        setEmployees([...employees, response.data]);
+        const updatedResponse = await axios.get("http://localhost:8080/api/users/all");
+      setEmployees(Array.isArray(updatedResponse.data) ? updatedResponse.data : []);
       }
       handleCloseModal();
     } catch (error) {
@@ -213,7 +214,7 @@ const HandleEmployees = () => {
                 />
               </div>
 
-              {!selectedEmployee.id && (
+              
                 <div className="employee-form-group">
                   <label>Password</label>
                   <input
@@ -224,7 +225,7 @@ const HandleEmployees = () => {
                     placeholder="Create password"
                   />
                 </div>
-              )}
+            
 
               <div className="employee-form-group">
                 <label>Department</label>

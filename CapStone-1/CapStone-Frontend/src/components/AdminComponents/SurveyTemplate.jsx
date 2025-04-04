@@ -14,6 +14,8 @@ const SurveyTemplate = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [selectedSurvey, setSelectedSurvey] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedSurvey, setEditedSurvey] = useState(null);
 
   useEffect(() => {
     const fetchSurveys = async () => {
@@ -79,6 +81,70 @@ const SurveyTemplate = () => {
     }
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setEditedSurvey({...selectedSurvey});
+  };
+
+  const handleEditChange = (field, value) => {
+    setEditedSurvey(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleQuestionChange = (index, value) => {
+    const updatedQuestions = [...editedSurvey.questions];
+    updatedQuestions[index] = value;
+    setEditedSurvey(prev => ({
+      ...prev,
+      questions: updatedQuestions
+    }));
+  };
+
+  const handleAddQuestion = () => {
+    setEditedSurvey(prev => ({
+      ...prev,
+      questions: [...prev.questions, ""]
+    }));
+  };
+
+  const handleRemoveQuestion = (index) => {
+    const updatedQuestions = editedSurvey.questions.filter((_, i) => i !== index);
+    setEditedSurvey(prev => ({
+      ...prev,
+      questions: updatedQuestions
+    }));
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/forms/update/${editedSurvey.formId}`,
+        editedSurvey
+      );
+      
+      if (response.status === 200) {
+        setSurveys(prev => 
+          prev.map(survey => 
+            survey.formId === editedSurvey.formId ? editedSurvey : survey
+          )
+        );
+        setSelectedSurvey(editedSurvey);
+        setIsEditing(false);
+        alert("Survey updated successfully!");
+      }
+    } catch (error) {
+      console.error("Error updating survey:", error);
+      alert("Failed to update survey.");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedSurvey(null);
+  };
+
   return (
     <div className="survey-template-container">
       <div className="survey-template-header">
@@ -118,9 +184,7 @@ const SurveyTemplate = () => {
                 <h3 className="survey-template-title">{survey.formType}</h3>
                 <p className="survey-template-description">{survey.description}</p>
                 <div className="survey-template-card-footer">
-                  <div className="survey-template-type">
-                    
-                  </div>
+                  <div className="survey-template-type"></div>
                   <div className="survey-template-actions">
                     <button className="survey-template-button" onClick={() => setSelectedSurvey(survey)}>View</button>
                     <button className="survey-template-button secondary" onClick={() => handleDeleteSurvey(survey.formId)}>Delete</button>
@@ -133,41 +197,132 @@ const SurveyTemplate = () => {
       </div>
 
       {selectedSurvey && (
-        <div className="survey-template-modal-overlay" onClick={() => setSelectedSurvey(null)}>
+        <div className="survey-template-modal-overlay" onClick={() => {
+          setSelectedSurvey(null);
+          setIsEditing(false);
+        }}>
           <div className="survey-template-modal" onClick={(e) => e.stopPropagation()}>
             <div className="survey-template-modal-header">
               <h2>Survey Details</h2>
-              
             </div>
             
             <div className="survey-template-modal-info">
-              <div className="survey-template-info-item">
-                <span className="survey-template-info-label">Survey Type:</span>
-                <span className="survey-template-info-value">{selectedSurvey.formType}</span>
-              </div>
-              <div className="survey-template-info-item">
-                <span className="survey-template-info-label">Description:</span>
-                <span className="survey-template-info-value">{selectedSurvey.description}</span>
-              </div>
+              {isEditing ? (
+                <>
+                  <div className="survey-template-info-item">
+                    <span className="survey-template-info-label">Survey Type:</span>
+                    <input
+                      type="text"
+                      value={editedSurvey.formType}
+                      onChange={(e) => handleEditChange('formType', e.target.value)}
+                      className="survey-template-edit-input"
+                    />
+                  </div>
+                  <div className="survey-template-info-item">
+                    <span className="survey-template-info-label">Description:</span>
+                    <textarea
+                      value={editedSurvey.description}
+                      onChange={(e) => handleEditChange('description', e.target.value)}
+                      className="survey-template-edit-textarea"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="survey-template-info-item">
+                    <span className="survey-template-info-label">Survey Type:</span>
+                    <span className="survey-template-info-value">{selectedSurvey.formType}</span>
+                  </div>
+                  <div className="survey-template-info-item">
+                    <span className="survey-template-info-label">Description:</span>
+                    <span className="survey-template-info-value">{selectedSurvey.description}</span>
+                  </div>
+                </>
+              )}
             </div>
             
             <div className="survey-template-modal-body">
               <h3>Questions</h3>
-              {selectedSurvey.questions && selectedSurvey.questions.map((question, index) => (
-                <div key={index} className="survey-template-survey-item">
-                  <div className="survey-template-question">
-                    <span className="survey-template-question-number">Q{index + 1}</span>
-                    <p>{question}</p>
-                  </div>
-                </div>
-              ))}
-              {!selectedSurvey.questions || selectedSurvey.questions.length === 0 && (
-                <p>No questions available for this survey.</p>
+              {isEditing ? (
+                <>
+                  {editedSurvey.questions.map((question, index) => (
+                    <div key={index} className="survey-template-question-edit">
+                      <div className="survey-template-question-edit-row">
+                        <span className="survey-template-question-number">Q{index + 1}</span>
+                        <input
+                          type="text"
+                          value={question}
+                          onChange={(e) => handleQuestionChange(index, e.target.value)}
+                          className="survey-template-edit-input"
+                        />
+                        <button 
+                          className="survey-template-question-remove"
+                          onClick={() => handleRemoveQuestion(index)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  <button 
+                    className="survey-template-button secondary"
+                    onClick={handleAddQuestion}
+                  >
+                    Add Question
+                  </button>
+                </>
+              ) : (
+                <>
+                  {selectedSurvey.questions && selectedSurvey.questions.map((question, index) => (
+                    <div key={index} className="survey-template-survey-item">
+                      <div className="survey-template-question">
+                        <span className="survey-template-question-number">Q{index + 1}</span>
+                        <p>{question}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {(!selectedSurvey.questions || selectedSurvey.questions.length === 0) && (
+                    <p>No questions available for this survey.</p>
+                  )}
+                </>
               )}
             </div>
             
             <div className="survey-template-modal-footer">
-              <button className="survey-template-button" onClick={() => setSelectedSurvey(null)}>Close</button>
+              {isEditing ? (
+                <>
+                  <button 
+                    className="survey-template-button secondary"
+                    onClick={handleCancelEdit}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    className="survey-template-button"
+                    onClick={handleSaveEdit}
+                  >
+                    Save Changes
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button 
+                    className="survey-template-button secondary"
+                    onClick={handleEditClick}
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    className="survey-template-button"
+                    onClick={() => {
+                      setSelectedSurvey(null);
+                      setIsEditing(false);
+                    }}
+                  >
+                    Close
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

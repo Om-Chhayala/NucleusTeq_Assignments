@@ -86,6 +86,64 @@
   border-radius: 4px;
 }
 
+/* Edit Mode Styles */
+.survey-template-edit-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-top: 5px;
+}
+
+.survey-template-edit-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-top: 5px;
+  resize: vertical;
+}
+
+.survey-template-question-edit {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f5f7fa;
+  border-radius: 6px;
+}
+
+.survey-template-question-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.survey-template-question-edit-row input {
+  flex-grow: 1;
+}
+
+.survey-template-question-remove {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.survey-template-question-remove:hover {
+  background-color: #c0392b;
+}
+
+/* Adjust modal width for edit mode */
+.survey-template-modal {
+  max-width: 700px;
+  width: 90%;
+}
+
 .survey-template-badge {
   background-color: #2ecc71;
   color: white;

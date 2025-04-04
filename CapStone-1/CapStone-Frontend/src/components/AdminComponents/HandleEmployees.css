@@ -104,8 +104,8 @@
   background: #2ecc71;
   color: white;
   border: none;
-  padding: 1rem 1.5rem;
-  border-radius: 50px;
+  width: fit-content;
+  border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;

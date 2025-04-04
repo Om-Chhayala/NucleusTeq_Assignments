@@ -27,7 +27,18 @@ public class EmployeeResponseController {
 
         return employeeResponseService.createResponse(userId, formId, responses);
     }
-
+    // Delete an employee response
+    @DeleteMapping("/{responseId}")
+    public ResponseEntity<String> deleteResponse(@PathVariable Long responseId) {
+        return employeeResponseService.deleteResponse(responseId);
+    }
+    // Update an employee response
+    @PutMapping("/{responseId}")
+    public ResponseEntity<String> updateResponse(
+            @PathVariable Long responseId,
+            @RequestBody EmployeeResponse updatedResponse) {
+        return employeeResponseService.updateResponse(responseId, updatedResponse);
+    }
     // Get all responses
     @GetMapping("/all")
     public ResponseEntity<List<EmployeeResponse>> getAllResponses() {

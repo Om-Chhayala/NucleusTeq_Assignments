@@ -48,7 +48,7 @@
 
 /* Delete Confirmation */
 .prev-survey-delete-confirm {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -60,19 +60,17 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   width: 90%;
   max-width: 500px;
-  z-index: 1010; /* Higher than the modal */
+  z-index: 1010;
 }
 
-/* Add a semi-transparent overlay inside the modal for the confirmation dialog */
-.prev-survey-modal-overlay .prev-survey-delete-confirm::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: -1;
+/* Blur effect when delete confirmation is shown */
+.prev-survey-modal-overlay.delete-confirm-active {
+  backdrop-filter: blur(5px);
+}
+
+.prev-survey-modal-overlay .delete-confirm-active .prev-survey-modal-content {
+  filter: blur(5px);
+  pointer-events: none;
 }
 
 .prev-survey-delete-confirm p {

@@ -14,6 +14,9 @@ const FormSubmission = () => {
   const [userId, setUserId] = useState(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [success, setSuccess] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const userEmail = localStorage.getItem("userEmail");
 
@@ -59,6 +62,14 @@ const FormSubmission = () => {
     setResponses((prev) => ({ ...prev, [questionId]: value }));
   };
 
+  const showToastNotification = (message) => {
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+  };
+
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
@@ -68,6 +79,7 @@ const FormSubmission = () => {
         responses: Object.values(responses),
       });
       setSuccess(true);
+      showToastNotification("Survey submitted successfully!");
       setTimeout(() => {
         navigate("/employee/home");
       }, 2000);
@@ -76,6 +88,14 @@ const FormSubmission = () => {
       setError("Failed to submit survey. Please try again.");
       setSubmitting(false);
     }
+  };
+
+  const openPreviewModal = () => {
+    setShowPreviewModal(true);
+  };
+
+  const closePreviewModal = () => {
+    setShowPreviewModal(false);
   };
 
   const nextQuestion = () => {
@@ -93,6 +113,10 @@ const FormSubmission = () => {
   const isCurrentQuestionAnswered = () => {
     const currentQuestion = questions[currentStep];
     return currentQuestion && responses[currentQuestion.id]?.trim() !== "";
+  };
+
+  const areAllQuestionsAnswered = () => {
+    return questions.every(question => responses[question.id]?.trim() !== "");
   };
 
   const isLastQuestion = currentStep === questions.length - 1;
@@ -150,6 +174,15 @@ const FormSubmission = () => {
 
   return (
     <div className="survey-page">
+      {showToast && (
+        <div className="toast-notification">
+          <div className="toast-content">
+            <div className="toast-icon">✓</div>
+            <p>{toastMessage}</p>
+          </div>
+        </div>
+      )}
+      
       <button 
         className="home-button" 
         onClick={() => navigate("/employee/home")}
@@ -214,15 +247,51 @@ const FormSubmission = () => {
             ) : (
               <button 
                 className="button submit-button" 
-                onClick={handleSubmit} 
+                onClick={openPreviewModal} 
                 disabled={!isCurrentQuestionAnswered() || submitting}
               >
-                {submitting ? "Submitting..." : "Submit Survey"}
+                {submitting ? "Submitting..." : "Review & Submit"}
               </button>
             )}
           </div>
         </div>
       </div>
+
+      {showPreviewModal && (
+        <div className="modal-overlay">
+          <div className="preview-modal">
+            <div className="modal-header">
+              <h3>Review Your Responses</h3>
+              <button className="close-button" onClick={closePreviewModal}>×</button>
+            </div>
+            <div className="modal-content">
+              {questions.map((question, index) => (
+                <div key={question.id} className="preview-item">
+                  <div className="preview-question">
+                    <span className="question-number">Q{index + 1}:</span> {question.questionText}
+                  </div>
+                  <div className="preview-answer">{responses[question.id]}</div>
+                </div>
+              ))}
+            </div>
+            <div className="modal-footer">
+              <p className="confirmation-text">Are you sure you want to submit this survey?</p>
+              <div className="modal-buttons">
+                <button className="button secondary-button" onClick={closePreviewModal}>
+                  Edit Responses
+                </button>
+                <button 
+                  className="button submit-button" 
+                  onClick={handleSubmit}
+                  disabled={submitting || !areAllQuestionsAnswered()}
+                >
+                  {submitting ? "Submitting..." : "Submit Survey"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

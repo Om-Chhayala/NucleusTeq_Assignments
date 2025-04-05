@@ -5,7 +5,6 @@ import com.om_capstone1_backend.capstone1_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,15 +16,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    // Register a new user
+    // Register a new user (without password encryption)
     public ResponseEntity<String> registerUser(UserModel user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt password
+        // Store password as plain text
         user.setStatus("ACTIVE"); // Default status
         userRepository.save(user);
 
@@ -50,10 +47,12 @@ public class UserService {
         }
     }
 
-    // Login user
+    // Login user (without password encryption)
     public ResponseEntity<String> loginUser(String email, String password) {
         Optional<UserModel> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isPresent() && passwordEncoder.matches(password, userOpt.get().getPassword())) {
+
+        // Compare plain text passwords directly
+        if (userOpt.isPresent() && password.equals(userOpt.get().getPassword())) {
             return ResponseEntity.ok("Login successful");
         }
         return ResponseEntity.badRequest().body("Invalid email or password");
@@ -61,7 +60,6 @@ public class UserService {
 
     public ResponseEntity<String> changeUserRole(Long id, String newRole) {
         try {
-            // Find the user by ID
             Optional<UserModel> optionalUser = userRepository.findById(id);
 
             if (optionalUser.isEmpty()) {
@@ -70,11 +68,7 @@ public class UserService {
             }
 
             UserModel user = optionalUser.get();
-
-            // Update the role
             user.setRole(newRole);
-
-            // Save the updated user
             userRepository.save(user);
 
             return ResponseEntity.ok("User role successfully changed to " + newRole);
@@ -91,7 +85,7 @@ public class UserService {
                 .orElseGet(() -> ResponseEntity.badRequest().body(null));
     }
 
-    // Update user profile
+    // Update user profile (without password encryption)
     public ResponseEntity<String> updateUser(UserModel updatedUser) {
         Optional<UserModel> userOpt = userRepository.findById(updatedUser.getId());
         if (userOpt.isPresent()) {
@@ -102,9 +96,9 @@ public class UserService {
             user.setContact(updatedUser.getContact());
             user.setAddress(updatedUser.getAddress());
 
-            // Only update password if a new one is provided
+            // Update password as plain text if provided
             if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-                user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+                user.setPassword(updatedUser.getPassword());
             }
 
             userRepository.save(user);

@@ -106,6 +106,10 @@
   background-color: #bdc3c7;
 }
 
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  background-color: rgb(59, 202, 59);
+}
+
 /* Survey List */
 .survey-responses-list-container {
   width: 100%;

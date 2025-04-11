@@ -28,14 +28,18 @@ public class EmployeeResponse {
     @Column(nullable = false)
     private LocalDateTime submittedAt; // Timestamp when the response was submitted
 
+    @Column(name = "rating")
+    private int rating;
+
     // Constructors
     public EmployeeResponse() {}
 
-    public EmployeeResponse(UserModel user, FormModel form, List<String> responses, LocalDateTime submittedAt) {
+    public EmployeeResponse(UserModel user, FormModel form, List<String> responses, int rating) {
         this.user = user;
         this.form = form;
         this.responses = responses;
-        this.submittedAt = submittedAt;
+        this.submittedAt = LocalDateTime.now();
+        this.rating = rating;
     }
 
     // Getters and Setters
@@ -77,5 +81,13 @@ public class EmployeeResponse {
 
     public void setSubmittedAt(LocalDateTime submittedAt) {
         this.submittedAt = submittedAt;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

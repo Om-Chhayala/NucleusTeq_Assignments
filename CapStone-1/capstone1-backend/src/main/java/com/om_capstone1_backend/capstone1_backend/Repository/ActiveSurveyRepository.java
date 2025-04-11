@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ActiveSurveyRepository extends JpaRepository<ActiveSurveyForm, Long> {
-    List<ActiveSurveyForm> findByCreatedAtBefore(LocalDateTime timestamp);
+    List<ActiveSurveyForm> findByCreatedAtBefore(LocalDateTime threshold);
 }

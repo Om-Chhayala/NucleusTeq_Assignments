@@ -18,6 +18,7 @@ const EmployeeHome = () => {
     axios
       .get("http://localhost:8080/api/active-surveys/fetch")
       .then((response) => {
+        console.log(response.data)
         setSurveys(response.data)
       })
       .catch((error) => {
@@ -71,7 +72,7 @@ const EmployeeHome = () => {
               <div className="employee-home-card" key={survey.formId}>
                 <div className="employee-home-card-header">
                   <span className="employee-home-date">
-                    {survey.createdAt ||
+                    {survey.createdAt||
                       new Date().toLocaleDateString(undefined, {
                         year: "numeric",
                         month: "short",

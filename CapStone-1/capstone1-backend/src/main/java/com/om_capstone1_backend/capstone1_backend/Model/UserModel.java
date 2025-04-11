@@ -45,7 +45,7 @@ public class UserModel {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.role = role.toUpperCase();
         this.status = status;
         this.department = department;
         this.contact = contact;
@@ -90,7 +90,7 @@ public class UserModel {
     }
 
     public void setRole(String role) {
-        this.role = role;
+        this.role = role.toUpperCase();
     }
 
     public String getStatus() {

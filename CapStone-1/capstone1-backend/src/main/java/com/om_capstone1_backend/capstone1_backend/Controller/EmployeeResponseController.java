@@ -3,10 +3,12 @@ package com.om_capstone1_backend.capstone1_backend.Controller;
 import com.om_capstone1_backend.capstone1_backend.Model.EmployeeResponse;
 import com.om_capstone1_backend.capstone1_backend.Service.EmployeeResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +26,9 @@ public class EmployeeResponseController {
         Long userId = Long.valueOf(requestData.get("userId").toString());
         Long formId = Long.valueOf(requestData.get("formId").toString());
         List<String> responses = (List<String>) requestData.get("responses");
+        int rating = Integer.parseInt(requestData.get("rating"));
 
-        return employeeResponseService.createResponse(userId, formId, responses);
+        return employeeResponseService.createResponse(userId, formId, responses, rating);
     }
     // Delete an employee response
     @DeleteMapping("/{responseId}")
@@ -52,21 +55,22 @@ public class EmployeeResponseController {
     }
 
     // Get responses by department
-    @GetMapping("/by-department")
-    public ResponseEntity<List<EmployeeResponse>> getResponsesByDepartment(@RequestParam String department) {
-        return ResponseEntity.ok(employeeResponseService.getResponsesByDepartment(department));
-    }
+    @GetMapping("/filter")
+    public ResponseEntity<List<EmployeeResponse>> filterResponses(
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
 
-    @GetMapping("/by-address")
-    public ResponseEntity<List<EmployeeResponse>> getResponsesByAddress(@RequestParam String address) {
-        return ResponseEntity.ok(employeeResponseService.getResponsesByAddress(address));
-    }
+        List<EmployeeResponse> responses = employeeResponseService.getFilteredResponses(
+                department,
+                address,
+                startTime,
+                endTime
+        );
 
-    // Get responses within a time range
-    @GetMapping("/by-time-range")
-    public ResponseEntity<List<EmployeeResponse>> getResponsesByTimeRange(@RequestBody Map<String, String> request) {
-        LocalDateTime startTime = LocalDateTime.parse(request.get("startTime"));
-        LocalDateTime endTime = LocalDateTime.parse(request.get("endTime"));
-        return ResponseEntity.ok(employeeResponseService.getResponsesByTimeRange(startTime, endTime));
+        return ResponseEntity.ok(responses);
     }
 }

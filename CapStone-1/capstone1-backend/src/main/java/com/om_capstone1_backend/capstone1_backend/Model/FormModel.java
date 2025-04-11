@@ -25,6 +25,9 @@ public class FormModel {
     @Column(nullable = false)
     private String formType; // Type of form (e.g., survey, feedback)
 
+    @Column(name = "is_active")
+    private Boolean is_active = false;
+
     // Constructors
     public FormModel() {}
 
@@ -67,4 +70,8 @@ public class FormModel {
     public void setFormType(String formType) {
         this.formType = formType;
     }
+
+    public void setIs_active(Boolean is_active) {this.is_active = is_active;}
+
+    public Boolean getIs_active() {return is_active;}
 }

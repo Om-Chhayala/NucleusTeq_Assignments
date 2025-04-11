@@ -144,71 +144,51 @@ const SurveyPDFDocument = ({ surveys, filters }) => (
 
 const SurveyResponses = () => {
   const [surveys, setSurveys] = useState([]);
-  const [filteredSurveys, setFilteredSurveys] = useState([]);
   const [department, setDepartment] = useState("");
   const [address, setAddress] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedSurvey, setSelectedSurvey] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentFilters, setCurrentFilters] = useState({});
+  const [error, setError] = useState(null);
+
+  const formatDateForAPI = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return date.toISOString().split('.')[0]; // YYYY-MM-DDTHH:MM:SS
+  };
+
+  const fetchSurveys = async (params = {}) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get("http://localhost:8080/api/employee-responses/filter", {
+        params,
+        paramsSerializer: {
+          indexes: null
+        }
+      });
+      setSurveys(response.data);
+    } catch (error) {
+      console.error("Error fetching responses:", error);
+      setError("Failed to load survey data. Please try again later.");
+      setSurveys([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchSurveys = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get("http://localhost:8080/api/employee-responses/all");
-        setSurveys(response.data);
-        setFilteredSurveys(response.data);
-      } catch (error) {
-        console.error("Error fetching responses:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchSurveys();
   }, []);
 
   const handleFilter = async () => {
-    setIsLoading(true);
-    const filters = { department, address, startTime, endTime };
-    setCurrentFilters(filters);
-    
-    try {
-      let filteredData = [...surveys];
-      
-      if (department) {
-        const response = await axios.get(`http://localhost:8080/api/employee-responses/by-department`, {
-          params: { department },
-        });
-        filteredData = response.data;
-      }
-      
-      if (address) {
-        const response = await axios.get(`http://localhost:8080/api/employee-responses/by-address`, {
-          params: { address },
-        });
-        filteredData = filteredData.filter(survey => 
-          response.data.some(r => r.id === survey.id)
-        );
-      }
-      
-      if (startTime && endTime) {
-        const response = await axios.get("http://localhost:8080/api/employee-responses/by-time-range", {
-          params: { startTime, endTime },
-        });
-        filteredData = filteredData.filter(survey => 
-          response.data.some(r => r.id === survey.id)
-        );
-      }
-      
-      setFilteredSurveys(filteredData);
-    } catch (error) {
-      console.error("Error filtering responses:", error.response?.data || error.message);
-      setFilteredSurveys([]);
-    } finally {
-      setIsLoading(false);
-    }
+    await fetchSurveys({
+      department: department || undefined,
+      address: address || undefined,
+      startTime: startTime ? formatDateForAPI(startTime) : undefined,
+      endTime: endTime ? formatDateForAPI(endTime) : undefined
+    });
   };
 
   const resetFilters = () => {
@@ -216,20 +196,26 @@ const SurveyResponses = () => {
     setAddress("");
     setStartTime("");
     setEndTime("");
-    setCurrentFilters({});
-    setFilteredSurveys(surveys);
+    fetchSurveys();
+  };
+
+  const currentFilters = {
+    department,
+    address,
+    startTime,
+    endTime
   };
 
   const PDFDownloadButton = () => (
     <PDFDownloadLink 
-      document={<SurveyPDFDocument surveys={filteredSurveys} filters={currentFilters} />} 
+      document={<SurveyPDFDocument surveys={surveys} filters={currentFilters} />} 
       fileName={`survey_responses_${new Date().toISOString().slice(0,10)}.pdf`}
       style={{ textDecoration: 'none' }}
     >
       {({ loading }) => (
         <button 
           className={`survey-responses-button ${loading ? 'pdf-loading' : 'pdf-button'}`}
-          disabled={loading || filteredSurveys.length === 0}
+          disabled={loading || surveys.length === 0}
         >
           {loading ? (
             <span className="pdf-button-content">
@@ -259,7 +245,13 @@ const SurveyResponses = () => {
         <h1>Survey Responses</h1>
         <p>View and filter employee survey responses</p>
       </div>
-      
+
+      {error && (
+        <div className="survey-responses-error">
+          {error}
+        </div>
+      )}
+
       <div className="survey-responses-filter-container">
         <div className="survey-responses-filter-group">
           <label htmlFor="department">Department</label>
@@ -324,7 +316,7 @@ const SurveyResponses = () => {
             <div className="survey-responses-spinner"></div>
             <p>Loading surveys...</p>
           </div>
-        ) : filteredSurveys.length === 0 ? (
+        ) : surveys.length === 0 ? (
           <div className="survey-responses-no-results">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
@@ -335,7 +327,7 @@ const SurveyResponses = () => {
           </div>
         ) : (
           <div className="survey-responses-list">
-            {filteredSurveys.map((survey, index) => (
+            {surveys.map((survey, index) => (
               <div className="survey-responses-card" key={index} onClick={() => setSelectedSurvey(survey)}>
                 <div className="survey-responses-card-header">
                   <span className="survey-responses-date">
@@ -370,6 +362,12 @@ const SurveyResponses = () => {
           <div className="survey-responses-modal" onClick={(e) => e.stopPropagation()}>
             <div className="survey-responses-modal-header">
               <h2>{selectedSurvey.form.formType}</h2>
+              <button 
+                className="survey-responses-modal-close"
+                onClick={() => setSelectedSurvey(null)}
+              >
+                &times;
+              </button>
             </div>
             
             <div className="survey-responses-modal-info">
@@ -417,10 +415,6 @@ const SurveyResponses = () => {
                   </div>
                 </div>
               ))}
-            </div>
-            
-            <div className="survey-responses-modal-footer">
-              <button className="survey-responses-button" onClick={() => setSelectedSurvey(null)}>Close</button>
             </div>
           </div>
         </div>

@@ -17,18 +17,19 @@ const SurveyTemplate = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedSurvey, setEditedSurvey] = useState(null);
 
+  const fetchSurveys = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/forms/all`);
+      setSurveys(data);
+    } catch (error) {
+      console.error("Error fetching surveys:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   useEffect(() => {
-    const fetchSurveys = async () => {
-      setIsLoading(true);
-      try {
-        const { data } = await axios.get(`${API_BASE_URL}/forms/all`);
-        setSurveys(data);
-      } catch (error) {
-        console.error("Error fetching surveys:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchSurveys();
   }, []);
 
@@ -78,6 +79,8 @@ const SurveyTemplate = () => {
     } catch (error) {
       console.error("Error publishing surveys:", error);
       alert("Failed to publish surveys.");
+    } finally {
+      fetchSurveys()
     }
   };
 
@@ -173,11 +176,7 @@ const SurveyTemplate = () => {
               <div className="survey-template-card" key={survey.formId}>
                 <div className="survey-template-card-header">
                   <span className="survey-template-date">
-                    {new Date().toLocaleDateString(undefined, {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric'
-                    })}
+                    {survey.is_active ? "Active" : "Not Active"}
                   </span>
                   <span className="survey-template-badge">{survey.formType}</span>
                 </div>

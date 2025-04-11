@@ -7,6 +7,7 @@ import com.om_capstone1_backend.capstone1_backend.Repository.EmployeeResponseRep
 import com.om_capstone1_backend.capstone1_backend.Repository.FormRepository;
 import com.om_capstone1_backend.capstone1_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,12 @@ public class EmployeeResponseService {
     private FormRepository formRepository;
 
     // Create an employee response
-    public ResponseEntity<String> createResponse(Long userId, Long formId, List<String> responses) {
+    public ResponseEntity<String> createResponse(Long userId, Long formId, List<String> responses, int rating) {
         Optional<UserModel> user = userRepository.findById(userId);
         Optional<FormModel> form = formRepository.findById(formId);
 
         if (user.isPresent() && form.isPresent()) {
-            EmployeeResponse response = new EmployeeResponse(user.get(), form.get(), responses, LocalDateTime.now());
+            EmployeeResponse response = new EmployeeResponse(user.get(), form.get(), responses, rating);
             employeeResponseRepository.save(response);
             return ResponseEntity.ok("Response submitted successfully");
         }
@@ -87,17 +88,32 @@ public class EmployeeResponseService {
         return employeeResponseRepository.findByUser_Id(id);
     }
 
-    // Get responses by department
-    public List<EmployeeResponse> getResponsesByDepartment(String department) {
-        return employeeResponseRepository.findByUser_Department(department);
+    public List<EmployeeResponse> getFilteredResponses(
+            String department,
+            String address,
+            LocalDateTime startTime,
+            LocalDateTime endTime) {
+
+        Specification<EmployeeResponse> spec = Specification.where(null);
+
+        if (department != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("user").get("department"), department));
+        }
+
+        if (address != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("user").get("address"), address));
+        }
+
+        if (startTime != null && endTime != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.between(root.get("submittedAt"), startTime, endTime));
+        }
+
+        // Correct non-static call on the repository instance
+        return employeeResponseRepository.findAll(spec);
     }
 
-    public List<EmployeeResponse> getResponsesByAddress(String address) {
-        return employeeResponseRepository.findByUser_Address(address);
-    }
 
-    // Get responses within a time range
-    public List<EmployeeResponse> getResponsesByTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
-        return employeeResponseRepository.findBySubmittedAtBetween(startTime, endTime);
-    }
 }

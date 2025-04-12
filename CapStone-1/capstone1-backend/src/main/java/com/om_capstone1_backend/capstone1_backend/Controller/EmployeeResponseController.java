@@ -26,7 +26,7 @@ public class EmployeeResponseController {
         Long userId = Long.valueOf(requestData.get("userId").toString());
         Long formId = Long.valueOf(requestData.get("formId").toString());
         List<String> responses = (List<String>) requestData.get("responses");
-        int rating = Integer.parseInt(requestData.get("rating"));
+        int rating = Integer.parseInt(requestData.get("rating").toString());
 
         return employeeResponseService.createResponse(userId, formId, responses, rating);
     }

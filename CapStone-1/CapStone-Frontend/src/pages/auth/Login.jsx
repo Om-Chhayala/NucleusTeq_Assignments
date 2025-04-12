@@ -37,6 +37,7 @@ const Login = () => {
 
       // Store user details in localStorage
       localStorage.setItem("userEmail", formData.email);
+      localStorage.setItem("userId", userProfile.data.id)
 
       if (who === "HR" && userProfile.data.role !== "HR") {
         setShowModal(true);

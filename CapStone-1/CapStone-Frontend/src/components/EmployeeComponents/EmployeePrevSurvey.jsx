@@ -1,126 +1,139 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import axios from "axios"
-import "./EmployeePrevSurvey.css"
-import { useNavigate } from "react-router-dom"
-import { showToast } from "../Toasters/toast-container"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "./EmployeePrevSurvey.css";
+import { useNavigate } from "react-router-dom";
+import { showToast } from "../Toasters/toast-container";
 
 const EmployeePrevSurvey = () => {
-  const [surveys, setSurveys] = useState([])
-  const [userId, setUserId] = useState(null)
-  const [selectedSurvey, setSelectedSurvey] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editedResponses, setEditedResponses] = useState([])
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const userEmail = localStorage.getItem("userEmail")
-  const navigate = useNavigate()
+  const [surveys, setSurveys] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [selectedSurvey, setSelectedSurvey] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedResponses, setEditedResponses] = useState([]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const userEmail = localStorage.getItem("userEmail");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const userResponse = await axios.get(`http://localhost:8080/api/users/profile?email=${userEmail}`)
-        setUserId(userResponse.data.id)
+        const userResponse = await axios.get(
+          `http://localhost:8080/api/users/profile?email=${userEmail}`
+        );
+        setUserId(userResponse.data.id);
       } catch (error) {
-        console.error("Error fetching user details:", error)
-        showToast("Failed to fetch user details", "error")
+        console.error("Error fetching user details:", error);
+        showToast("Failed to fetch user details", "error");
       }
-    }
+    };
 
     if (userEmail) {
-      fetchUserId()
+      fetchUserId();
     }
-  }, [userEmail])
+  }, [userEmail]);
 
   useEffect(() => {
     const fetchSurveys = async () => {
-      if (!userId) return
-      setIsLoading(true)
+      if (!userId) return;
+      setIsLoading(true);
       try {
-        const response = await axios.get(`http://localhost:8080/api/employee-responses/by-id?id=${userId}`)
-        setSurveys(response.data)
+        const response = await axios.get(
+          `http://localhost:8080/api/employee-responses/by-id?id=${userId}`
+        );
+        setSurveys(response.data);
       } catch (error) {
-        console.error("Error fetching previous surveys:", error)
-        showToast("Failed to load surveys", "error")
+        console.error("Error fetching previous surveys:", error);
+        showToast("Failed to load surveys", "error");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
     if (userId) {
-      fetchSurveys()
+      fetchSurveys();
     }
-  }, [userId])
+  }, [userId]);
 
   const handleEditForm = () => {
-    setIsEditing(true)
-    setEditedResponses([...selectedSurvey.responses])
-  }
+    setIsEditing(true);
+    setEditedResponses([...selectedSurvey.responses]);
+  };
 
   const handleResponseChange = (index, value) => {
-    const updatedResponses = [...editedResponses]
-    updatedResponses[index] = value
-    setEditedResponses(updatedResponses)
-  }
+    const updatedResponses = [...editedResponses];
+    updatedResponses[index] = value;
+    setEditedResponses(updatedResponses);
+  };
 
   const handleCancelEdit = () => {
-    setIsEditing(false)
-    setEditedResponses([])
-  }
+    setIsEditing(false);
+    setEditedResponses([]);
+  };
 
   const handleSaveEdit = async () => {
     try {
       const updatedSurvey = {
         ...selectedSurvey,
         responses: editedResponses,
-      }
+      };
 
-      await axios.put(`http://localhost:8080/api/employee-responses/${selectedSurvey.id}`, updatedSurvey)
+      await axios.put(
+        `http://localhost:8080/api/employee-responses/${selectedSurvey.id}`,
+        updatedSurvey
+      );
 
       const updatedSurveys = surveys.map((survey) =>
-        survey.id === selectedSurvey.id ? { ...survey, responses: editedResponses } : survey,
-      )
+        survey.id === selectedSurvey.id
+          ? { ...survey, responses: editedResponses }
+          : survey
+      );
 
-      setSurveys(updatedSurveys)
-      setSelectedSurvey({ ...selectedSurvey, responses: editedResponses })
-      setIsEditing(false)
-      showToast("Survey responses updated successfully", "success")
+      setSurveys(updatedSurveys);
+      setSelectedSurvey({ ...selectedSurvey, responses: editedResponses });
+      setIsEditing(false);
+      showToast("Survey responses updated successfully", "success");
     } catch (error) {
-      console.error("Error updating survey responses:", error)
-      showToast("Failed to update survey", "error")
+      console.error("Error updating survey responses:", error);
+      showToast("Failed to update survey", "error");
     }
-  }
+  };
 
   const handleDeleteSurvey = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/employee-responses/${selectedSurvey.id}`)
+      await axios.delete(
+        `http://localhost:8080/api/employee-responses/${selectedSurvey.id}`
+      );
 
-      const updatedSurveys = surveys.filter((survey) => survey.id !== selectedSurvey.id)
-      setSurveys(updatedSurveys)
-      closeModal()
-      setShowDeleteConfirm(false)
-      showToast("Survey deleted successfully", "success")
+      const updatedSurveys = surveys.filter(
+        (survey) => survey.id !== selectedSurvey.id
+      );
+      setSurveys(updatedSurveys);
+      closeModal();
+      setShowDeleteConfirm(false);
+      showToast("Survey deleted successfully", "success");
     } catch (error) {
-      console.error("Error deleting survey:", error)
-      showToast("Failed to delete survey", "error")
+      console.error("Error deleting survey:", error);
+      showToast("Failed to delete survey", "error");
     }
-  }
+  };
 
   const openSurveyDetails = (survey) => {
-    setSelectedSurvey(survey)
-  }
+    setSelectedSurvey(survey);
+  };
 
   const closeModal = () => {
-    setSelectedSurvey(null)
-    setIsEditing(false)
-    setEditedResponses([])
-    setShowDeleteConfirm(false)
-  }
+    setSelectedSurvey(null);
+    setIsEditing(false);
+    setEditedResponses([]);
+    setShowDeleteConfirm(false);
+  };
 
   const confirmDelete = () => {
-    setShowDeleteConfirm(true)
-  }
+    setShowDeleteConfirm(true);
+  };
 
   return (
     <div className="prev-survey-container">
@@ -160,22 +173,32 @@ const EmployeePrevSurvey = () => {
               <div className="prev-survey-card" key={index}>
                 <div className="prev-survey-card-header">
                   <span className="prev-survey-date">
-                    {new Date(survey.submittedAt).toLocaleDateString(undefined, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {new Date(survey.submittedAt).toLocaleDateString(
+                      undefined,
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )}
                   </span>
-                  <span className="prev-survey-badge">{survey.form.formType}</span>
+                  <span className="prev-survey-badge">
+                    {survey.form.formType}
+                  </span>
                 </div>
                 <h3 className="prev-survey-title">{survey.form.formType}</h3>
-                <p className="prev-survey-description">{survey.form.description}</p>
+                <p className="prev-survey-description">
+                  {survey.form.description}
+                </p>
                 <div className="prev-survey-card-footer">
                   <div className="prev-survey-owner">
                     <span>By {survey.user.name}</span>
                   </div>
                   <div className="prev-survey-actions">
-                    <button className="prev-survey-button" onClick={() => openSurveyDetails(survey)}>
+                    <button
+                      className="prev-survey-button"
+                      onClick={() => openSurveyDetails(survey)}
+                    >
                       View Details
                     </button>
                   </div>
@@ -188,10 +211,15 @@ const EmployeePrevSurvey = () => {
 
       {selectedSurvey && (
         <div
-          className={`prev-survey-modal-overlay ${showDeleteConfirm ? "delete-confirm-active" : ""}`}
+          className={`prev-survey-modal-overlay ${
+            showDeleteConfirm ? "delete-confirm-active" : ""
+          }`}
           onClick={closeModal}
         >
-          <div className="prev-survey-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="prev-survey-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h2>Survey Responses</h2>
             <p>
               <strong>Survey Type:</strong> {selectedSurvey.form.formType}
@@ -200,7 +228,8 @@ const EmployeePrevSurvey = () => {
               <strong>Description:</strong> {selectedSurvey.form.description}
             </p>
             <p>
-              <strong>Date Submitted:</strong> {new Date(selectedSurvey.submittedAt).toLocaleDateString()}
+              <strong>Date Submitted:</strong>{" "}
+              {new Date(selectedSurvey.submittedAt).toLocaleDateString()}
             </p>
             <h3>Your Responses</h3>
 
@@ -213,7 +242,9 @@ const EmployeePrevSurvey = () => {
                     <textarea
                       className="prev-survey-edit-textarea"
                       value={editedResponses[index]}
-                      onChange={(e) => handleResponseChange(index, e.target.value)}
+                      onChange={(e) =>
+                        handleResponseChange(index, e.target.value)
+                      }
                     />
                   </div>
                 ))
@@ -222,29 +253,51 @@ const EmployeePrevSurvey = () => {
                     <p className="prev-survey-question">
                       <strong>Q{index + 1}:</strong> {question}
                     </p>
-                    <p className="prev-survey-answer">{selectedSurvey.responses[index]}</p>
+                    <p className="prev-survey-answer">
+                      {selectedSurvey.responses[index]}
+                    </p>
                   </div>
                 ))}
 
             <div className="prev-survey-modal-buttons">
               {isEditing ? (
                 <>
-                  <button className="prev-survey-modal-button save-button" onClick={handleSaveEdit}>
+                  <button
+                    className="prev-survey-modal-button save-button"
+                    onClick={handleSaveEdit}
+                  >
                     Save Changes
                   </button>
-                  <button className="prev-survey-modal-button cancel-button" onClick={handleCancelEdit}>
+                  <button
+                    className="prev-survey-modal-button cancel-button"
+                    onClick={handleCancelEdit}
+                  >
                     Cancel
                   </button>
                 </>
               ) : (
                 <>
-                  <button className="prev-survey-modal-button edit-button" onClick={handleEditForm}>
+                  <button
+                    disabled={
+                      new Date().getTime() -
+                        new Date(selectedSurvey.submittedAt).getTime() >
+                      24 * 60 * 60 * 1000
+                    }
+                    className="prev-survey-modal-button edit-button"
+                    onClick={handleEditForm}
+                  >
                     Edit
                   </button>
-                  <button className="prev-survey-modal-button delete-button" onClick={confirmDelete}>
+                  <button
+                    className="prev-survey-modal-button delete-button"
+                    onClick={confirmDelete}
+                  >
                     Delete Survey
                   </button>
-                  <button className="prev-survey-modal-button" onClick={closeModal}>
+                  <button
+                    className="prev-survey-modal-button"
+                    onClick={closeModal}
+                  >
                     Close
                   </button>
                 </>
@@ -255,7 +308,10 @@ const EmployeePrevSurvey = () => {
               <div className="prev-survey-delete-confirm">
                 <p>Are you sure you want to delete this survey response?</p>
                 <div className="prev-survey-confirm-buttons">
-                  <button className="prev-survey-modal-button confirm-delete-button" onClick={handleDeleteSurvey}>
+                  <button
+                    className="prev-survey-modal-button confirm-delete-button"
+                    onClick={handleDeleteSurvey}
+                  >
                     Yes, Delete
                   </button>
                   <button
@@ -271,8 +327,7 @@ const EmployeePrevSurvey = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default EmployeePrevSurvey
-
+export default EmployeePrevSurvey;

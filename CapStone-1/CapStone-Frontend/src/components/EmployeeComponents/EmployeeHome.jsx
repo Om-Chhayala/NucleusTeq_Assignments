@@ -12,23 +12,28 @@ const EmployeeHome = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Fetch active surveys from backend
-    setIsLoading(true)
-
-    axios
-      .get("http://localhost:8080/api/active-surveys/fetch")
-      .then((response) => {
-        console.log(response.data)
-        setSurveys(response.data)
-      })
-      .catch((error) => {
-        console.error("Error fetching active surveys:", error)
-        showToast("Failed to load surveys", "error")
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }, [])
+    const fetchActiveSurveys = async () => {
+      setIsLoading(true);
+      try {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          throw new Error("User ID not found");
+        }
+  
+        const response = await axios.get(
+          `http://localhost:8080/api/active-surveys/fetch?userId=${userId}`
+        );
+        setSurveys(response.data);
+      } catch (error) {
+        console.error("Error fetching active surveys:", error);
+        showToast("Failed to load surveys", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchActiveSurveys();
+  }, []); 
 
   const handleFillSurvey = (formId) => {
     navigate(`/employee/fillsurvey/${formId}`)

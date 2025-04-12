@@ -376,6 +376,10 @@ const SurveyResponses = () => {
                 <span className="survey-responses-info-value">{selectedSurvey.user.name}</span>
               </div>
               <div className="survey-responses-info-item">
+                <span className="survey-responses-info-label">Experience:</span>
+                <span className="survey-responses-info-value">{selectedSurvey.rating}</span>
+              </div>
+              <div className="survey-responses-info-item">
                 <span className="survey-responses-info-label">Department:</span>
                 <span className="survey-responses-info-value">{selectedSurvey.user.department}</span>
               </div>

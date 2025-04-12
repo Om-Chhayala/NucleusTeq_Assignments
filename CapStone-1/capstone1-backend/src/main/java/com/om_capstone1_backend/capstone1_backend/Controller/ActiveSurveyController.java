@@ -24,7 +24,7 @@ public class ActiveSurveyController {
 
     // Fetch active survey forms
     @GetMapping("/fetch")
-    public ResponseEntity<List<FormModel>> getActiveSurveyForms() {
-        return ResponseEntity.ok(activeSurveyService.getActiveSurveyForms());
+    public ResponseEntity<List<FormModel>> getActiveSurveyForms(@RequestParam("userId") Long userId) {
+        return ResponseEntity.ok(activeSurveyService.getActiveSurveyForms(userId));
     }
 }

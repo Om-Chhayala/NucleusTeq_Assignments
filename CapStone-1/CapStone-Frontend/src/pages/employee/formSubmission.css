@@ -453,6 +453,60 @@ h2 {
   font-size: 18px;
 }
 
+/* Star Rating Component */
+.rating-section {
+  padding: 20px;
+  border-top: 1px solid #eaedf3;
+  text-align: center;
+}
+
+.rating-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1a202c;
+}
+
+.rating-section p {
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.stars-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.star {
+  font-size: 28px;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.1s;
+}
+
+.star:hover {
+  transform: scale(1.1);
+}
+
+.star.filled {
+  color: #f59e0b;
+}
+
+.rating-value {
+  margin-left: 10px;
+  font-weight: 600;
+  color: #1a202c;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .survey-container {
@@ -480,13 +534,17 @@ h2 {
     padding: 6px 12px;
     font-size: 12px;
   }
-  
+
   .preview-modal {
     max-width: 95%;
   }
-  
+
   .modal-buttons {
     flex-direction: column;
+  }
+
+  .star {
+    font-size: 24px;
   }
 }
 
@@ -507,10 +565,18 @@ h2 {
   .secondary-button {
     order: 2;
   }
-  
+
   .toast-notification {
     left: 20px;
     right: 20px;
     width: calc(100% - 40px);
+  }
+
+  .stars-container {
+    gap: 2px;
+  }
+
+  .star {
+    font-size: 20px;
   }
 }

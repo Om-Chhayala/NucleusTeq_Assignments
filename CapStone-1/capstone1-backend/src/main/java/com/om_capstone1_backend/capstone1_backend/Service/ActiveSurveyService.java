@@ -1,8 +1,11 @@
 package com.om_capstone1_backend.capstone1_backend.Service;
 
 import com.om_capstone1_backend.capstone1_backend.Model.ActiveSurveyForm;
+import com.om_capstone1_backend.capstone1_backend.Model.EmployeeResponse;
 import com.om_capstone1_backend.capstone1_backend.Model.FormModel;
+import com.om_capstone1_backend.capstone1_backend.Model.UserModel;
 import com.om_capstone1_backend.capstone1_backend.Repository.ActiveSurveyRepository;
+import com.om_capstone1_backend.capstone1_backend.Repository.EmployeeResponseRepository;
 import com.om_capstone1_backend.capstone1_backend.Repository.FormRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +24,9 @@ public class ActiveSurveyService {
 
     @Autowired
     private FormRepository formRepository;
+
+    @Autowired
+    private EmployeeResponseRepository employeeResponseRepository;
 
     // Store active survey forms
     public ResponseEntity<String> storeActiveSurveyForms(List<Long> formIds) {
@@ -56,11 +60,20 @@ public class ActiveSurveyService {
     }
 
     // Fetch complete forms that are currently active
-    public List<FormModel> getActiveSurveyForms() {
+    public List<FormModel> getActiveSurveyForms(Long userId) {
+        // Get forms already filled by user
+        Set<Long> alreadyFilledForms = employeeResponseRepository.findByUser_Id(userId)
+                .stream()
+                .map(EmployeeResponse::getForm)
+                .map(FormModel::getFormId)
+                .collect(Collectors.toSet());
+
         List<Long> activeFormIds = activeSurveyRepository.findAll()
                 .stream()
                 .map(ActiveSurveyForm::getFormId)
+                .filter(formId -> !alreadyFilledForms.contains(formId))
                 .collect(Collectors.toList());
+
         return formRepository.findAllById(activeFormIds);
     }
 
